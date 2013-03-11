@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class Sudoku {
 
-	SudokuStack unassigned;
+	SudokuStack unassigned; //Stack contains 2D array positions for empty squares in the sudoku grid
 	int n;
 	int counter=0;
 	int root_n;
@@ -20,12 +20,12 @@ public class Sudoku {
 		if(unassigned.isEmpty())
 			return true;
 		pos=unassigned.pop();counter++;
-		if(pos==null) return true;
+		if(pos==null) return true; //if the stack is empty, all positions have been filled
 
 		for(int i=1;i<=n;i++){
 			counter+=((3*n)-(2*root_n)-1);
-			if(!adjlist[pos[0]][pos[1]].check(i,grid,n)){
-				grid[pos[0]][pos[1]]=i; counter++;
+			if(!adjlist[pos[0]][pos[1]].check(i,grid,n)){ //If "i" can be filled in the array position
+				grid[pos[0]][pos[1]]=i; counter++; 
 			//	System.out.println("\n");
 			//	printGrid(n*n);
 				if(solveSudoku()) return true; 
@@ -36,8 +36,8 @@ public class Sudoku {
 	return false;
 	}
 
-
-	private int[][] generateGrid() {
+	/* generateGrid generates a n*n empty sudoku grid*/
+	private int[][] generateGrid() { 
 		int[][] tgrid=new int[n+1][n+1];
 		unassigned=new SudokuStack();
 	//	grid[0][0]=-1;
@@ -64,6 +64,7 @@ public class Sudoku {
 		}
 	}
 
+	/*The createLists() function maintains adjacency lists that keep track of neighbors of each node in the sudoku grid*/
 	private void createLists() {
 	
 		adjlist=new LinkedList[n+1][n+1];
@@ -117,12 +118,14 @@ public class Sudoku {
 		}		
 	}
 	
+	/*problemInstance reads an input Sudoku problem from a text file and returns the problem as a partially filled
+	 sudoku grid (2D Array)*/
 	private int[][] problemInstance() {
 		int tgrid[][]=new int[10][10];
 		BufferedReader br = null;
 		unassigned=new SudokuStack();
 		try {
-			br = new BufferedReader(new FileReader("G:/SkyDrive/Project/MyCode/givens - 2/inputwith17filled.txt"));
+			br = new BufferedReader(new FileReader("inputwith17filled.txt"));//Input file with 9*9 partially filled sudoku
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -153,7 +156,7 @@ public class Sudoku {
 	
 	public static void main(String args[]){
 		Sudoku S=new Sudoku();
-		S.n=9;
+		S.n=9; /* Number of squares in a whole row of the sudoku grid */
 		S.root_n=(int)Math.sqrt(S.n);
 		S.grid=S.generateGrid();
 		S.grid=S.problemInstance();
